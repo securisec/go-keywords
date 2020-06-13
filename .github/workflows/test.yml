@@ -1,0 +1,42 @@
+name: tests
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    name: Test package
+    strategy:
+      max-parallel: 9
+      fail-fast: true
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        go:
+          - "1.14"
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        env:
+          GOPATH: ${{ runner.workspace }}
+          GO111MODULE: "off"
+      
+      - name: Go setup
+        uses: actions/setup-go@v1.0.0
+        with:
+          go-version: ${{matrix.go}}
+        env:
+          GOPATH: ${{ runner.workspace }}
+          GO111MODULE: "off"
+      - name: Run test
+        env:
+          GOPATH: ${{ runner.workspace }}
+          GO111MODULE: "off"
+        run: |
+          go get -u github.com/grokify/html-strip-tags-go
+          go test ./...
+      
