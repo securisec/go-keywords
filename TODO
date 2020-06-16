@@ -1,19 +1,20 @@
 
 Todo:
+  ☐ match only specified pattern
 
 Languages:
-  ☐ danish
-  ☐ french
-  ☐ german
   ☐ galician
-  ☐ italian
   ☐ dutch
-  ☐ portuguese
   ☐ romanian
-  ☐ russian
   ☐ swedish
 
 Archive:
+  ✔ danish @project(Languages)
+  ✔ french @project(Languages)
+  ✔ german @project(Languages)
+  ✔ italian @project(Languages)
+  ✔ portuguese @project(Languages)
+  ✔ russian @project(Languages)
   ✔ write readme @project(Todo)
   ✔ Write docs @project(Todo)
   ✔ Write tests @project(Todo)

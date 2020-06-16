@@ -1,6 +1,7 @@
 package keywords
 
-var es = []string{
+// Spanish language stopwords
+var Spanish = []string{
 	"0",
 	"1",
 	"2",

@@ -1,6 +1,7 @@
 package keywords
 
-var en = []string{
+// English language stopwords
+var English = []string{
 	"a",
 	"a's",
 	"able",

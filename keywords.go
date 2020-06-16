@@ -5,12 +5,7 @@ import (
 	"strings"
 
 	strip "github.com/grokify/html-strip-tags-go"
-)
-
-// LangLangEnglish Specifies the use of English stopwords. Default
-const (
-	LangEnglish = "en"
-	LangSpanish = "es"
+	keywords "github.com/securisec/go-keywords/languages"
 )
 
 // ExtractOptions Options to pass to the Extract function
@@ -18,9 +13,10 @@ type ExtractOptions struct {
 	RemoveDigits     bool     // Remove digits from found words. Defaults to true
 	RemoveDuplicates bool     // Remove duplications from found words. Defaults to true
 	Lowercase        bool     // Change all found words to lowercase. Defaults to true
-	Language         string   // Language to use for keywords extraction. Defaults to "en"
+	Language         []string // Language to use for keywords extraction. Defaults to "English"
 	AddStopwords     []string // Append additional stopwords to ignore. Defaults to empty array
 	IgnorePattern    string   // Ignore matches for the specified regex pattern. Defaults to ""
+	MatchPattern     string   // Only patch the specified regex pattern. Defaults to ""
 	StripTags        bool     // Strip HTML tags. Defaults to false
 }
 
@@ -41,26 +37,24 @@ func Extract(s string, options ...ExtractOptions) ([]string, error) {
 		if len(o.AddStopwords) == 0 {
 			o.AddStopwords = []string{}
 		}
-		if o.Language == "" {
-			o.Language = LangEnglish
+		// set default language
+		if len(o.Language) == 0 {
+			stopwords = keywords.English
+		} else {
+			stopwords = o.Language
 		}
 	} else {
 		o = ExtractOptions{
 			RemoveDigits:     true,
 			RemoveDuplicates: true,
 			Lowercase:        true,
-			Language:         LangEnglish,
+			Language:         keywords.English,
 			AddStopwords:     []string{},
 			IgnorePattern:    "",
+			MatchPattern:     "",
 			StripTags:        false,
 		}
-	}
-	// TODO add other languages here
-	switch o.Language {
-	case "en":
-		stopwords = en
-	case "es":
-		stopwords = es
+		stopwords = o.Language
 	}
 
 	// Add additional stopwords is specified
@@ -110,6 +104,16 @@ func Extract(s string, options ...ExtractOptions) ([]string, error) {
 				results = append(results, strings.ToLower(word))
 			} else {
 				results = append(results, word)
+			}
+		}
+	}
+
+	if o.MatchPattern != "" {
+		initialResult := results
+		results = []string{}
+		for _, r := range initialResult {
+			if regexp.MustCompile(o.MatchPattern).MatchString(r) {
+				results = append(results, r)
 			}
 		}
 	}
