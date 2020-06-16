@@ -40,12 +40,12 @@ func TestStringAllOptions(t *testing.T) {
 func TestHtmlStripped(t *testing.T) {
 	var err error
 	data, err := ioutil.ReadFile("./test/test.html")
-	k, err := Extract(string(data), ExtractOptions{StripTags: true})
+	k, err := Extract(string(data), ExtractOptions{StripTags: true, IgnorePattern: "<.+>"})
 	if err != nil {
 		t.Error(err)
 	}
-	if len(k) != 6 {
-		t.Errorf("Expected 6, got %d %s", len(k), k)
+	if len(k) != 7 {
+		t.Errorf("Expected 7, got %d %s", len(k), k)
 	}
 }
 

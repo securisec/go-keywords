@@ -108,6 +108,7 @@ func Extract(s string, options ...ExtractOptions) ([]string, error) {
 		}
 	}
 
+	// Match only requested pattern
 	if o.MatchPattern != "" {
 		initialResult := results
 		results = []string{}
