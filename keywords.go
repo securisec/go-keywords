@@ -18,6 +18,7 @@ type ExtractOptions struct {
 	IgnorePattern    string   // Ignore matches for the specified regex pattern. Defaults to ""
 	MatchPattern     string   // Only patch the specified regex pattern. Defaults to ""
 	StripTags        bool     // Strip HTML tags. Defaults to false
+	IgnoreLength     int      // Ignore any words less than specified length. Defaults to 1
 }
 
 // Extract Extract keywords from a string.
@@ -43,6 +44,9 @@ func Extract(s string, options ...ExtractOptions) ([]string, error) {
 		} else {
 			stopwords = o.Language
 		}
+		if o.IgnoreLength == 0 {
+			o.IgnoreLength = 1
+		}
 	} else {
 		o = ExtractOptions{
 			RemoveDigits:     true,
@@ -53,6 +57,7 @@ func Extract(s string, options ...ExtractOptions) ([]string, error) {
 			IgnorePattern:    "",
 			MatchPattern:     "",
 			StripTags:        false,
+			IgnoreLength:     1,
 		}
 		stopwords = o.Language
 	}
@@ -78,7 +83,7 @@ func Extract(s string, options ...ExtractOptions) ([]string, error) {
 		return catchErr(nil)
 	}
 
-	specialChars := "\\.|,|;|!|\\?|\\(|\\)|:|\"|\\^'|\\$|“|”|‘|’|”|<|>"
+	specialChars := "\\.|,|;|!|\\?|\\(|\\)|:|\"|\\^'|\\$|“|”|‘|’|”|<|>|–"
 
 	for _, w := range words {
 		checkLink := regexp.MustCompile("^https?://.+")
@@ -92,7 +97,7 @@ func Extract(s string, options ...ExtractOptions) ([]string, error) {
 			if o.RemoveDigits {
 				w = regexp.MustCompile("\\d").ReplaceAllString(w, "")
 			}
-			if len(w) > 0 {
+			if len(w) > o.IgnoreLength {
 				matchWords = append(matchWords, w)
 			}
 		}

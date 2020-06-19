@@ -1,4 +1,6 @@
 
+Fix:
+
 Todo:
   ☐ match only specified pattern
 
@@ -9,6 +11,7 @@ Languages:
   ☐ swedish
 
 Archive:
+  ✔ @low "Notion – The all-in-one" the `-` is not being ignored in this sentence. 3 bytes @project(Fix)
   ✔ danish @project(Languages)
   ✔ french @project(Languages)
   ✔ german @project(Languages)
